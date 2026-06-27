@@ -71,17 +71,28 @@ def send_teams_alert(alerts):
     breached = [a for a in alerts if a["breached"]]
     warnings = [a for a in alerts if a["warning"]]
 
+    today_str = datetime.now().strftime('%d %b %Y, %I:%M %p')
+
     def ticket_block(a):
         color = "attention" if a["breached"] else "warning"
-        status_text = "🔴 BREACHED" if a["breached"] else "🟡 WARNING"
-        remaining_str = "OVERDUE" if a["breached"] else a["remaining"]
+        status_text = "BREACHED" if a["breached"] else "WARNING"
+        remaining_str = "OVERDUE" if a["breached"] else f"{a['remaining']} left"
+
+        # Truncate summary so "KEY  summary" reliably fits on one line
+        max_summary_len = 48
+        summary = a["summary"]
+        if len(summary) > max_summary_len:
+            summary = summary[:max_summary_len - 1].rstrip() + "…"
+
         return {
             "type": "Container",
             "style": color,
             "bleed": True,
+            "spacing": "Small",
             "items": [
                 {
                     "type": "ColumnSet",
+                    "spacing": "Small",
                     "columns": [
                         {
                             "type": "Column",
@@ -89,16 +100,15 @@ def send_teams_alert(alerts):
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": f"**{a['key']}** — {a['summary'][:80]}",
+                                    "text": f"[{a['key']}](https://axso-tim.atlassian.net/browse/{a['key']})  {summary}",
                                     "wrap": False,
-                                    "maxLines": 1,
                                     "weight": "Bolder",
                                     "size": "Small"
                                 },
                                 {
                                     "type": "TextBlock",
-                                    "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
-                                    "wrap": False,
+                                    "text": f"{a['assignee']}   ·   {a['priority']} priority   ·   SLA {a['sla_goal']}",
+                                    "wrap": True,
                                     "size": "Small",
                                     "isSubtle": True,
                                     "spacing": "None"
@@ -108,19 +118,23 @@ def send_teams_alert(alerts):
                         {
                             "type": "Column",
                             "width": "auto",
+                            "verticalContentAlignment": "Center",
                             "items": [
                                 {
                                     "type": "TextBlock",
                                     "text": status_text,
                                     "weight": "Bolder",
                                     "size": "Small",
-                                    "color": "Attention" if a["breached"] else "Warning"
+                                    "color": "Attention" if a["breached"] else "Warning",
+                                    "horizontalAlignment": "Right",
+                                    "spacing": "None"
                                 },
                                 {
                                     "type": "TextBlock",
                                     "text": remaining_str,
                                     "size": "Small",
                                     "isSubtle": True,
+                                    "horizontalAlignment": "Right",
                                     "spacing": "None"
                                 }
                             ],
@@ -139,7 +153,7 @@ def send_teams_alert(alerts):
     if breached:
         body_blocks.append({
             "type": "TextBlock",
-            "text": f"🔴 BREACHED ({len(breached)})",
+            "text": f"BREACHED · {len(breached)}",
             "weight": "Bolder",
             "color": "Attention",
             "size": "Medium",
@@ -151,7 +165,7 @@ def send_teams_alert(alerts):
     if warnings:
         body_blocks.append({
             "type": "TextBlock",
-            "text": f"🟡 WARNING ({len(warnings)})",
+            "text": f"AT RISK · {len(warnings)}",
             "weight": "Bolder",
             "color": "Warning",
             "size": "Medium",
@@ -179,14 +193,14 @@ def send_teams_alert(alerts):
                                 "items": [
                                     {
                                         "type": "TextBlock",
-                                        "text": "⚠️ MI DataOps — Jira SLA Alert",
+                                        "text": "MI DataOps · Jira SLA Alert",
                                         "weight": "Bolder",
                                         "size": "Large",
                                         "wrap": True
                                     },
                                     {
                                         "type": "TextBlock",
-                                        "text": f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M')}  |  📋 {len(alerts)} ticket(s) flagged",
+                                        "text": f"{today_str}  ·  {len(alerts)} ticket(s) flagged",
                                         "isSubtle": True,
                                         "size": "Small",
                                         "spacing": "None"
@@ -199,18 +213,20 @@ def send_teams_alert(alerts):
                                 "items": [
                                     {
                                         "type": "TextBlock",
-                                        "text": f"🔴 {len(breached)} Breached",
+                                        "text": f"{len(breached)} Breached",
                                         "weight": "Bolder",
                                         "color": "Attention",
-                                        "size": "Small"
+                                        "size": "Small",
+                                        "horizontalAlignment": "Right"
                                     },
                                     {
                                         "type": "TextBlock",
-                                        "text": f"🟡 {len(warnings)} Warning",
+                                        "text": f"{len(warnings)} At Risk",
                                         "weight": "Bolder",
                                         "color": "Warning",
                                         "size": "Small",
-                                        "spacing": "None"
+                                        "spacing": "None",
+                                        "horizontalAlignment": "Right"
                                     }
                                 ],
                                 "horizontalAlignment": "Right"
@@ -224,7 +240,7 @@ def send_teams_alert(alerts):
         "actions": [
             {
                 "type": "Action.OpenUrl",
-                "title": "📋 Open Jira Board",
+                "title": "Open Jira Board",
                 "url": "https://axso-tim.atlassian.net/jira/servicedesk/projects/SR/queues"
             }
         ]
