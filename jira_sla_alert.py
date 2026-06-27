@@ -78,8 +78,9 @@ def send_teams_alert(alerts):
         status_text = "🔴 BREACHED" if a["breached"] else "🟡 WARNING"
         remaining_str = "OVERDUE" if a["breached"] else a["remaining"]
 
-        # Truncate summary so "KEY — summary" reliably fits on one line
-        max_summary_len = 48
+        # Truncate summary more tightly so "KEY — summary" reliably fits on one line
+        # even on narrower Teams panes (mobile / side panel)
+        max_summary_len = 38
         summary = a["summary"]
         if len(summary) > max_summary_len:
             summary = summary[:max_summary_len - 1].rstrip() + "…"
@@ -91,31 +92,25 @@ def send_teams_alert(alerts):
             "spacing": "Small",
             "items": [
                 {
+                    "type": "TextBlock",
+                    "text": f"**{a['key']}** — {summary}",
+                    "wrap": False,
+                    "weight": "Bolder",
+                    "size": "Small",
+                    "spacing": "None"
+                },
+                {
+                    "type": "TextBlock",
+                    "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
+                    "wrap": False,
+                    "size": "Small",
+                    "isSubtle": True,
+                    "spacing": "None"
+                },
+                {
                     "type": "ColumnSet",
-                    "spacing": "None",
+                    "spacing": "Small",
                     "columns": [
-                        {
-                            "type": "Column",
-                            "width": "stretch",
-                            "items": [
-                                {
-                                    "type": "TextBlock",
-                                    "text": f"**{a['key']}** — {summary}",
-                                    "wrap": False,
-                                    "weight": "Bolder",
-                                    "size": "Small",
-                                    "spacing": "None"
-                                },
-                                {
-                                    "type": "TextBlock",
-                                    "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
-                                    "wrap": False,
-                                    "size": "Small",
-                                    "isSubtle": True,
-                                    "spacing": "None"
-                                }
-                            ]
-                        },
                         {
                             "type": "Column",
                             "width": "auto",
@@ -126,19 +121,22 @@ def send_teams_alert(alerts):
                                     "weight": "Bolder",
                                     "size": "Small",
                                     "color": "Attention" if a["breached"] else "Warning",
-                                    "horizontalAlignment": "Right",
                                     "spacing": "None"
-                                },
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "items": [
                                 {
                                     "type": "TextBlock",
                                     "text": remaining_str,
                                     "size": "Small",
                                     "isSubtle": True,
-                                    "horizontalAlignment": "Right",
                                     "spacing": "None"
                                 }
-                            ],
-                            "horizontalAlignment": "Right"
+                            ]
                         }
                     ]
                 }
