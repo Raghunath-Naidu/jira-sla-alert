@@ -92,35 +92,27 @@ def send_teams_alert(alerts):
             "spacing": "Small",
             "items": [
                 {
-                    "type": "TextBlock",
-                    "text": f"**{a['key']}** — {summary}",
-                    "wrap": False,
-                    "weight": "Bolder",
-                    "size": "Small",
-                    "spacing": "None"
-                },
-                {
-                    "type": "TextBlock",
-                    "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
-                    "wrap": False,
-                    "size": "Small",
-                    "isSubtle": True,
-                    "spacing": "None"
-                },
-                {
                     "type": "ColumnSet",
-                    "spacing": "Small",
+                    "spacing": "None",
                     "columns": [
                         {
                             "type": "Column",
-                            "width": "auto",
+                            "width": "stretch",
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": status_text,
+                                    "text": f"**{a['key']}** — {summary}",
+                                    "wrap": False,
                                     "weight": "Bolder",
                                     "size": "Small",
-                                    "color": "Attention" if a["breached"] else "Warning",
+                                    "spacing": "None"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
+                                    "wrap": False,
+                                    "size": "Small",
+                                    "isSubtle": True,
                                     "spacing": "None"
                                 }
                             ]
@@ -131,12 +123,23 @@ def send_teams_alert(alerts):
                             "items": [
                                 {
                                     "type": "TextBlock",
+                                    "text": status_text,
+                                    "weight": "Bolder",
+                                    "size": "Small",
+                                    "color": "Attention" if a["breached"] else "Warning",
+                                    "horizontalAlignment": "Right",
+                                    "spacing": "None"
+                                },
+                                {
+                                    "type": "TextBlock",
                                     "text": remaining_str,
                                     "size": "Small",
                                     "isSubtle": True,
+                                    "horizontalAlignment": "Right",
                                     "spacing": "None"
                                 }
-                            ]
+                            ],
+                            "horizontalAlignment": "Right"
                         }
                     ]
                 }
@@ -179,7 +182,7 @@ def send_teams_alert(alerts):
         "body": [
             {
                 "type": "Container",
-                "style": "attention",
+                "style": "emphasis",
                 "bleed": True,
                 "items": [
                     {
@@ -194,13 +197,11 @@ def send_teams_alert(alerts):
                                         "text": "⚠️ MI DataOps — Jira SLA Alert",
                                         "weight": "Bolder",
                                         "size": "Large",
-                                        "color": "Light",
                                         "wrap": True
                                     },
                                     {
                                         "type": "TextBlock",
                                         "text": f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M')}  |  📋 {len(alerts)} ticket(s) flagged",
-                                        "color": "Light",
                                         "isSubtle": True,
                                         "size": "Small",
                                         "spacing": "None"
@@ -215,14 +216,14 @@ def send_teams_alert(alerts):
                                         "type": "TextBlock",
                                         "text": f"🔴 {len(breached)} Breached",
                                         "weight": "Bolder",
-                                        "color": "Light",
+                                        "color": "Attention",
                                         "size": "Small"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "text": f"🟡 {len(warnings)} Warning",
                                         "weight": "Bolder",
-                                        "color": "Light",
+                                        "color": "Warning",
                                         "size": "Small",
                                         "spacing": "None"
                                     }
