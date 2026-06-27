@@ -13,7 +13,7 @@ JIRA_EMAIL        = os.environ["JIRA_EMAIL"]
 JIRA_API_TOKEN    = os.environ["JIRA_API_TOKEN"]
 TEAMS_WEBHOOK_URL = os.environ["TEAMS_WEBHOOK_URL"]
 
-WARNING_BUFFER_HOURS = 40
+WARNING_BUFFER_HOURS = 3
 
 # ── JIRA ──────────────────────────────────────────────────────────────────────
 def get_jira_tickets():
@@ -109,7 +109,7 @@ def send_teams_alert(alerts):
                                 },
                                 {
                                     "type": "TextBlock",
-                                    "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
+                                    "text": f" {a['assignee']}  |   {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
                                     "wrap": False,
                                     "size": "Small",
                                     "isSubtle": True,
