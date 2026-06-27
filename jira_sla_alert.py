@@ -90,7 +90,7 @@ def send_teams_alert(alerts):
                                 {
                                     "type": "TextBlock",
                                     "text": f"**{a['key']}** — {a['summary'][:80]}",
-                                    "wrap": True,
+                                    "wrap": False,
                                     "maxLines": 2,
                                     "weight": "Bolder",
                                     "size": "Small"
