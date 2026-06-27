@@ -13,7 +13,7 @@ JIRA_EMAIL        = os.environ["JIRA_EMAIL"]
 JIRA_API_TOKEN    = os.environ["JIRA_API_TOKEN"]
 TEAMS_WEBHOOK_URL = os.environ["TEAMS_WEBHOOK_URL"]
 
-WARNING_BUFFER_HOURS = 2
+WARNING_BUFFER_HOURS = 40
 
 # ── JIRA ──────────────────────────────────────────────────────────────────────
 def get_jira_tickets():
