@@ -179,7 +179,7 @@ def send_teams_alert(alerts):
         "body": [
             {
                 "type": "Container",
-                "style": "emphasis",
+                "style": "attention",
                 "bleed": True,
                 "items": [
                     {
@@ -194,11 +194,13 @@ def send_teams_alert(alerts):
                                         "text": "⚠️ MI DataOps — Jira SLA Alert",
                                         "weight": "Bolder",
                                         "size": "Large",
+                                        "color": "Light",
                                         "wrap": True
                                     },
                                     {
                                         "type": "TextBlock",
                                         "text": f"🕐 {datetime.now().strftime('%Y-%m-%d %H:%M')}  |  📋 {len(alerts)} ticket(s) flagged",
+                                        "color": "Light",
                                         "isSubtle": True,
                                         "size": "Small",
                                         "spacing": "None"
@@ -213,14 +215,14 @@ def send_teams_alert(alerts):
                                         "type": "TextBlock",
                                         "text": f"🔴 {len(breached)} Breached",
                                         "weight": "Bolder",
-                                        "color": "Attention",
+                                        "color": "Light",
                                         "size": "Small"
                                     },
                                     {
                                         "type": "TextBlock",
                                         "text": f"🟡 {len(warnings)} Warning",
                                         "weight": "Bolder",
-                                        "color": "Warning",
+                                        "color": "Light",
                                         "size": "Small",
                                         "spacing": "None"
                                     }
