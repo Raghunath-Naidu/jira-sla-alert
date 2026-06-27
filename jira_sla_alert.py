@@ -91,14 +91,14 @@ def send_teams_alert(alerts):
                                     "type": "TextBlock",
                                     "text": f"**{a['key']}** — {a['summary'][:80]}",
                                     "wrap": False,
-                                    "maxLines": 2,
+                                    "maxLines": 1,
                                     "weight": "Bolder",
                                     "size": "Small"
                                 },
                                 {
                                     "type": "TextBlock",
                                     "text": f"👤 {a['assignee']}  |  🎯 {a['priority']}  |  ⏱ SLA: {a['sla_goal']}",
-                                    "wrap": True,
+                                    "wrap": False,
                                     "size": "Small",
                                     "isSubtle": True,
                                     "spacing": "None"
