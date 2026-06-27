@@ -22,6 +22,7 @@ jobs:
 
       - name: Run SLA Alert
         env:
-          JIRA_COOKIE: ${{ secrets.JIRA_COOKIE }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
         run: python jira_sla_alert.py
